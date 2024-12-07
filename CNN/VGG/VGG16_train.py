@@ -44,8 +44,6 @@ feature_model = tf.keras.applications.VGG16(
     weights='imagenet',  # 預層訓練權重
     input_shape=input_shape,
     pooling='max',   # 最大池化
-    classes=num_classes, # 類別數量
-    classifier_activation='softmax' # 最終分類層的激活函數
 )
 feature_model.trainable = False # 凍結權重
 
