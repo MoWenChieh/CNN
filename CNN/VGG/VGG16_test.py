@@ -11,7 +11,7 @@ class_names = [image_path.parent.name for image_path in Path(test_root).rglob("*
 # 設定模型
 model = tf.keras.models.load_model('VGG16_model.h5')    # 載入模型
 image_size = model.input_shape  # 圖片大小
-batch_size = 16  # 批次大小
+batch_size = 64  # 批次大小
 
 # 測試資料
 test_data = tf.keras.preprocessing.image_dataset_from_directory(
