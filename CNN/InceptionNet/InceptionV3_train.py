@@ -8,7 +8,7 @@ from tensorflow.keras.optimizers import Adam
 train_root = r'D:\大學課程\四上\電腦視覺\期末\train_dataset'  # 訓練資料集的資料夾
 num_classes = len([file for file in os.listdir(train_root) if os.path.isdir(os.path.join(train_root, file))])   # 類別數量
 image_size = (224, 224)  # 圖片大小
-batch_size = 16  # 批次大小
+batch_size = 64  # 批次大小
 epochs = 50  # 訓練次數
 
 # 訓練資料
@@ -43,26 +43,19 @@ feature_model = tf.keras.applications.InceptionV3(
     include_top=False,  # 無頂層分類層
     weights='imagenet',  # 預層訓練權重
     input_shape=input_shape,
-    pooling='max',   # 最大池化
-    classes=num_classes, # 類別數量
-    classifier_activation='softmax' # 最終分類層的激活函數
+    pooling='avg'   # 平均泛化
 )
+feature_model.trainable = False  # 凍結權重
 
 # 建立 InceptionV3 模型
 model = models.Sequential([
     feature_model,
-    layers.Flatten(),  # Flatten層將輸出攤平
-    layers.Dense(4096, activation='relu'),  # 全連接層
-    layers.BatchNormalization(),  # BatchNormalization層 (自動調整每層的輸入分佈，防止梯度消失問題，並減少訓練過程中的波動)
-    layers.Dropout(0.5),  # Dropout層防止過擬合
-    layers.Dense(4096, activation='relu'),
-    layers.BatchNormalization(),
-    layers.Dropout(0.5),
-    layers.Dense(4096, activation='relu'),
-    layers.BatchNormalization(),
-    layers.Dropout(0.5),
-    layers.Dense(num_classes, activation='softmax')  # 輸出層
+    layers.Dense(256, activation='relu'),  # 全連接層
+    layers.BatchNormalization(),  # 調整輸入分佈
+    layers.Dropout(0.5),  # 阻止過擬合
+    layers.Dense(num_classes, activation='softmax')  # 最終分類層
 ])
+
 model.compile(optimizer=Adam(learning_rate=1e-4), loss='categorical_crossentropy', metrics=['accuracy'])    # 編譯模型
 history = model.fit(x=tdata, epochs=epochs, validation_data=vdata, batch_size=batch_size)  # 訓練模型
 model.save('InceptionV3_model.h5')    # 保存模型
