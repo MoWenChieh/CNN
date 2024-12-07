@@ -43,7 +43,7 @@ feature_model = tf.keras.applications.VGG16(
     include_top=False,  # 無頂層分類層
     weights='imagenet',  # 預層訓練權重
     input_shape=input_shape,
-    pooling='max',   # 最大池化
+    pooling='max'   # 最大池化
 )
 feature_model.trainable = False # 凍結權重
 
