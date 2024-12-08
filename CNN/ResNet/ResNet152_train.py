@@ -1,4 +1,3 @@
-import os
 import tensorflow as tf
 import matplotlib.pyplot as plt
 from tensorflow.keras import layers, models
@@ -6,7 +5,6 @@ from tensorflow.keras.optimizers import Adam
 
 # 設定
 train_root = r'D:\大學課程\四上\電腦視覺\期末\train_dataset'  # 訓練資料集的資料夾
-num_classes = len([file for file in os.listdir(train_root) if os.path.isdir(os.path.join(train_root, file))])   # 類別數量
 image_size = (224, 224)  # 圖片大小
 batch_size = 64  # 批次大小
 epochs = 50  # 訓練次數
@@ -33,9 +31,8 @@ vdata = tf.keras.preprocessing.image_dataset_from_directory(
     label_mode='categorical'
 )
 
-# 提升訓練效率、並行化資料加載
-tdata = tdata.prefetch(buffer_size=batch_size)
-vdata = vdata.prefetch(buffer_size=batch_size)
+# 圖片預處理
+
 
 # 載入官方模型
 feature_model = tf.keras.applications.ResNet152(
@@ -53,7 +50,7 @@ model = models.Sequential([
     layers.Dense(256, activation='relu'),  # 全連接層
     layers.BatchNormalization(),  # 調整輸入分佈
     layers.Dropout(0.5),  # 阻止過擬合
-    layers.Dense(num_classes, activation='softmax')  # 最終分類層
+    layers.Dense(len(tdata.class_names), activation='softmax')  # 最終分類層
 ])
 
 model.compile(optimizer=Adam(learning_rate=1e-4), loss='categorical_crossentropy', metrics=['accuracy'])    # 編譯模型
