@@ -38,18 +38,19 @@ tdata = tdata.prefetch(buffer_size=batch_size)
 vdata = vdata.prefetch(buffer_size=batch_size)
 input_shape = (image_size[0], image_size[1], 3)  # 圖片輸入的形狀
 
-# InceptionV3 預訓練
+# 載入官方模型
 feature_model = tf.keras.applications.InceptionV3(
-    include_top=False,  # 無頂層分類層
-    weights='imagenet',  # 預層訓練權重
+    include_top=False,  # 無全連接層
+    weights='imagenet',  # 全連接層訓練權重
     input_shape=input_shape,
-    pooling='avg'   # 平均泛化
+    pooling='max'   # 最大池化
 )
-feature_model.trainable = False  # 凍結權重
+feature_model.trainable = False # 凍結權重
 
-# 建立 InceptionV3 模型
+# 建立模型
 model = models.Sequential([
     feature_model,
+    layers.Flatten(),  # 攤平向量
     layers.Dense(256, activation='relu'),  # 全連接層
     layers.BatchNormalization(),  # 調整輸入分佈
     layers.Dropout(0.5),  # 阻止過擬合
