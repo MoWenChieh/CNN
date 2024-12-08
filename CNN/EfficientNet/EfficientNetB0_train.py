@@ -33,16 +33,15 @@ vdata = tf.keras.preprocessing.image_dataset_from_directory(
     label_mode='categorical'
 )
 
-# 預處理資料
+# 提升訓練效率、並行化資料加載
 tdata = tdata.prefetch(buffer_size=batch_size)
 vdata = vdata.prefetch(buffer_size=batch_size)
-input_shape = (image_size[0], image_size[1], 3)  # 圖片輸入的形狀
 
 # 載入官方模型
 feature_model = tf.keras.applications.EfficientNetB0(
     include_top=False,  # 無全連接層
     weights='imagenet',  # 全連接層訓練權重
-    input_shape=input_shape,
+    input_shape=(image_size[0], image_size[1], 3),  # 圖片輸入的形狀
     pooling='max'   # 最大池化
 )
 feature_model.trainable = False # 凍結權重
