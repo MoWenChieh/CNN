@@ -18,7 +18,8 @@ test_data = tf.keras.preprocessing.image_dataset_from_directory(
     directory=test_root,
     image_size=(image_size[1], image_size[2]),
     batch_size=batch_size,
-    label_mode='categorical'
+    label_mode='categorical',
+    shuffle=False  # 禁用打亂讀取順序
 )
 
 # 圖片預處理
