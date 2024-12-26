@@ -4,11 +4,11 @@ from joblib import load
 from sklearn.metrics import accuracy_score
 
 # 測試集資料路徑
-train_file_path = r"D:\大學課程\四上\電腦視覺\期末\test_dataset.txt"
+test_file_path = r"D:\大學課程\四上\電腦視覺\期末\test_dataset.txt"
 
 # 取測試資料
 data, img_names = [], []
-with open(file=train_file_path, mode="r", encoding="utf-8") as file:
+with open(file=test_file_path, mode="r", encoding="utf-8") as file:
     for line in file:
         line = line.strip().split()
         features, label = [float(x) for x in line[:-2]], line[-2]  # 特徵轉為浮點數、標籤
